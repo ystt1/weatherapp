@@ -169,8 +169,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
 //        curCity=getCurLocation(location.getLongitude(),location.getLatitude());
+
+
+
         getApi(curCity);
         cityTIET.setAdapter(new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1,cityOfVietNam));
         searchingIV.setOnClickListener(new View.OnClickListener() {
@@ -217,9 +219,11 @@ public class MainActivity extends AppCompatActivity {
     }
     public static String removeAccent(String s) {
 
-        String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        return (pattern.matcher(temp).replaceAll("")).replace(" ","%20");
+        if (s == null) {
+            return null;
+        }
+        String result = Normalizer.normalize(s, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+        return result;
     }
 
     @Override
@@ -237,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void getApi(String cityName)
     {
+        Log.e("cityName", cityName );
         String key="fed96f8301cd48c9a4f65203233004";
         String flag=cityName;
         if(cityName=="Thành phố Hồ Chí Minh") {
@@ -244,10 +249,11 @@ public class MainActivity extends AppCompatActivity {
         }
         String name=removeAccent(flag);
 
+
         weatherModalArrayList.clear();
         String url= "https://api.weatherapi.com/v1/forecast.json?key="+key+"&q="+name+"&days=1&aqi=no&alerts=no";
         RequestQueue requestQueue= Volley.newRequestQueue(MainActivity.this);
-        Log.d("api", url);
+
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -282,8 +288,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Error", String.valueOf(error));
-            }
-        });
+            }     });
         requestQueue.add(jsonObjectRequest);
     }
 

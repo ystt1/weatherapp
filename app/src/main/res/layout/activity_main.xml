@@ -38,7 +38,7 @@
             android:padding="20dp"
             android:text="Tên Thành Phố"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/red"
             android:textSize="18sp"></TextView>
 
         <LinearLayout
